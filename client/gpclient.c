@@ -10,7 +10,15 @@
 #include <getopt.h>
 #include <string.h>
 
-#ifndef LIBUSB_LOG_LEVEL_DEBUG
+/*
+ * we have to find out whether this is a sufficiently modern libusb.
+ * unfortunately, older libusb implementations have no way to tell 
+ * what version they are. But maybe the presence of the LIBUSB_ERROR_COUNT
+ * preprocessor symbol allows us to recognize sufficiently modern 
+ * libusb for a full implementation
+ */
+
+#ifndef LIBUSB_ERROR_COUNT
 #define LIBUSB_LOG_LEVEL_INFO	3
 #define LIBUSB_LOG_LEVEL_DEBUG	4
 char	*libusb_strerror(int rc) {
@@ -44,15 +52,19 @@ char	*libusb_strerror(int rc) {
 	}
 	return "other error";
 }
-#else
-#define HAS_USB_DEBUG 1
-#endif /* LIBUSB_LOG_LEVEL_DEBUG */
+#endif /* LIBUSB_ERROR_COUNT */
 
+/*
+ * commands understood by the GuiderPort device
+ */
 #define GUIDERPORT_RESET		0
 #define GUIDERPORT_SET			1
 #define GUIDERPORT_SET_PORT_TIME	2
 #define GUIDERPORT_SET_ALL_TIMES	3
 
+/*
+ * display the descriptors, for tesing
+ */
 int	show_descriptors(libusb_device_handle *handle) {
 	libusb_device	*device = libusb_get_device(handle);
 
@@ -120,6 +132,9 @@ void	show_version() {
 		version->major, version->minor, version->micro, version->nano);
 }
 
+/*
+ * Show usage message
+ */
 void	usage(const char *progname) {
 	printf("usage:\n");
 	printf("  %s [ options ] descriptors\n", progname);
@@ -135,6 +150,9 @@ void	usage(const char *progname) {
 	printf(" -p <pid>   use this product id to connect\n");
 }
 
+/*
+ * Main function of the client program
+ */
 int	main(int argc, char *argv[]) {
 	// parse command line
 	int	c;
