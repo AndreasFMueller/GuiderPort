@@ -6,6 +6,7 @@ The firmware is configured using the GNU autotools. This means that
 the build system has first to be set up using the commands
 
 	libtoolize -f
+	aclocal
 	autoheader
 	automake -a -c
 	autoconf

@@ -30,3 +30,28 @@
 
 # Debug files
 *.dSYM/
+
+# additional stuff to ignore in this particular project
+client/gpclient
+firmware/.deps/
+firmware/.libs/
+firmware/Makefile
+firmware/Makefile.in
+firmware/aclocal.m4
+firmware/autom4te.cache/
+firmware/config.guess
+firmware/config.h
+firmware/config.h.in
+firmware/config.log
+firmware/config.status
+firmware/config.sub
+firmware/configure
+firmware/depcomp
+firmware/guiderport
+firmware/guiderport.eeprom
+firmware/install-sh
+firmware/libtool
+firmware/ltmain.sh
+firmware/missing
+firmware/stamp-h1
+
