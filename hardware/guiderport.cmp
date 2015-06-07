@@ -1,0 +1,150 @@
+Cmp-Mod V01 Created by CvPcb (2013-mar-30)-stable date = Fri 31 Oct 2014 12:04:01 PM CET
+
+BeginCmp
+TimeStamp = /5446788F;
+Reference = C1;
+ValeurCmp = 10u;
+IdModule  = c_tant_B;
+EndCmp
+
+BeginCmp
+TimeStamp = /544674BC;
+Reference = C2;
+ValeurCmp = 0.1u;
+IdModule  = SM0603_Capa;
+EndCmp
+
+BeginCmp
+TimeStamp = /5446769E;
+Reference = C3;
+ValeurCmp = 1u;
+IdModule  = SM0603_Capa;
+EndCmp
+
+BeginCmp
+TimeStamp = /5446D536;
+Reference = C4;
+ValeurCmp = 22p;
+IdModule  = SM0603_Capa;
+EndCmp
+
+BeginCmp
+TimeStamp = /5446D545;
+Reference = C5;
+ValeurCmp = 22p;
+IdModule  = SM0603_Capa;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466A21;
+Reference = D1;
+ValeurCmp = LED;
+IdModule  = LED-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466A39;
+Reference = D2;
+ValeurCmp = LED;
+IdModule  = LED-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466A3F;
+Reference = D3;
+ValeurCmp = LED;
+IdModule  = LED-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466A45;
+Reference = D4;
+ValeurCmp = LED;
+IdModule  = LED-0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466BD8;
+Reference = IC1;
+ValeurCmp = PC847;
+IdModule  = SO16N;
+EndCmp
+
+BeginCmp
+TimeStamp = /54467322;
+Reference = IC2;
+ValeurCmp = AT90USB162-A;
+IdModule  = TQFP32;
+EndCmp
+
+BeginCmp
+TimeStamp = /544669F1;
+Reference = J1;
+ValeurCmp = USB;
+IdModule  = USB_B;
+EndCmp
+
+BeginCmp
+TimeStamp = /54467369;
+Reference = P1;
+ValeurCmp = ISP;
+IdModule  = pin_array_3x2;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466A0E;
+Reference = P2;
+ValeurCmp = Autoguide;
+IdModule  = Guiderport;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466A4D;
+Reference = R1;
+ValeurCmp = 390;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466A5F;
+Reference = R2;
+ValeurCmp = 390;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466A69;
+Reference = R3;
+ValeurCmp = 390;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /54466A70;
+Reference = R4;
+ValeurCmp = 390;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /544677BF;
+Reference = R5;
+ValeurCmp = 22;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /544677CE;
+Reference = R6;
+ValeurCmp = 22;
+IdModule  = SM0603;
+EndCmp
+
+BeginCmp
+TimeStamp = /5446D478;
+Reference = X1;
+ValeurCmp = 8MHz;
+IdModule  = Q_49U3HMS;
+EndCmp
+
+EndListe

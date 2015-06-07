@@ -1,0 +1,53 @@
+This directory contains the firmware for the guider port device.
+
+Configuration:
+
+The firmware is configured using the GNU autotools. This means that
+the build system has first to be set up using the commands
+
+	libtoolize -f
+	autoheader
+	automake -a -c
+	autoconf
+
+The firmware requires the LUFA library that can be downloaded from
+www.fourwalledcubicle.com. After unpacking the library, use the
+--with-lufa option to configure the firmware with the location of
+the LUFA library. If you unpack the library to /var/tmp/lufa, then
+you should give the configure option
+
+	./configure --host=avr --with-lufa=/var/tmp/lufa
+
+The --host option is necessary to tell configure to cross compile
+for the AVR platform.
+
+The serial number, the vendor id and the product id are hard wired 
+into the code. The default values are:
+
+	vendor id:  	0xF055
+	product id: 	0x1234
+	serial number:	12345678
+
+If you want to change them, you should modify the code in descriptor.c,
+search for the string "CONFIGURATION" to locate the definitions of these
+variables. Note that if you change vendor id or product id, you also have
+to change the guider port client program gpclient.c or you will have to
+use the -v and -p options to gpclient in each call.
+
+Installation:
+
+The USB descriptor containing the serial number is located in the EEPROM
+of the microcontroller.  This means that the software cannot work by
+simply flashing the firmware, one needs to separately load the serial
+number string into the EEPROM. The advantage is that the serial number
+can be set independently of the software installation.
+
+There are two targets in the Makefile to install the software and
+the serial number:
+
+	make flash	# install the firmware in flash memory
+	make eeprom	# install the serial number descriptor
+
+Note that writing flash resets the EEPROM, so the commands have to
+be issued in the order specified.
+

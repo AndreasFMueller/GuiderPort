@@ -1,0 +1,4 @@
+This directory contains files to print a case for the GuiderPort
+hardware. The OpenSCAD file case.scad contains the definition, the
+STL file can be used for printing with most 3D-printers.
+

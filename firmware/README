@@ -1,0 +1,63 @@
+This directory contains the firmware for the guider port device.
+
+Instructions for building and installing the firmware can be found
+in the file INSTALL.
+
+What to expect from the device
+
+The GuiderPort device has four opto-controller outputs. The state of
+these outputs is also displayed on four LEDs mounted on the board.
+The outputs are numbered 0 to 3, and are connected to the following
+signals on the guider port:
+
+	output		guider port signal
+	------		------------------
+	0		RAPLUS
+	1		DECPLUS
+	2		DECMINUS
+	3		RAMINUS
+
+The device is bus powered. When it is plugged into the bus it starts
+up and indicates that it is ready by lighting the LEDs in a circular
+pattern for about two seconds. Then the LEDs are turned off and the
+device becomes visible on the USB bus.
+
+The device has only a control endpoint. In addition to the commands
+required by the USB standard, the device implements four vendor specific
+commands. They should be sent as vendor specific device requests from
+the host to the device. The parameters are specified in the wIndex and
+wValue fields of the USB request,
+
+
+RESET, bRequest = 0
+	This command resets the microcontroller of the GuiderPort device.
+	It disappears from the USB bus, goes through the initialization
+	(flashing the LEDs as explained above) and reconnects to the bus.
+
+SET, bRequest = 1
+	This command allows to change the output state of some of the four 
+	outputs. The low four bits of the wIndex field contain a bitmap
+	indicating which outputs should be modified by the command, and
+	the low four bits of the wValue field contain the new values for
+	those bits.
+
+SET_PORT_TIME, bRequest = 2
+	This command sets the time in 100ths of a second during which
+	the output specified by number in wIndex should be turned on.
+	The time is specified in the wValue field of the request. The
+	maximum value is 65535, which corresponds the 655.35 seconds.
+	If the time specified in a previous request has not expired yet,
+	then the command just resets the timer.
+
+SET_ALL_TIMES, bRequest = 3
+	This command allows to set the time for all outputs in a single
+	request. Since the time values are 16 bit unsigned integers,
+	the standard request structure does not allow for enough data.
+	Thus the time values are sent as 8 bytes containing the for
+	unsigned short numbers in little endian format. The values in
+	wIndex and wValue are ignored.
+
+Note that some mounts cannot handle multiple guider port outputs being
+active at the same time. It is the responsibility of the driver software
+to ensure that this does not happen for such mounts.
+

@@ -1,0 +1,7 @@
+#
+# Makefile -- build test client for the guiderport interface
+#
+# (c) 2015 Prof Dr Andreas Mueller, Hochschule Rapperswil
+#
+gpclient:	gpclient.c
+	gcc -Wall -O -g -o gpclient gpclient.c -lusb-1.0
