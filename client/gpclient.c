@@ -61,6 +61,7 @@ char	*libusb_strerror(int rc) {
 #define GUIDERPORT_SET			1
 #define GUIDERPORT_SET_PORT_TIME	2
 #define GUIDERPORT_SET_ALL_TIMES	3
+#define GUIDERPORT_GET			4
 
 /*
  * display the descriptors, for tesing
@@ -234,6 +235,29 @@ int	main(int argc, char *argv[]) {
 		}
 		return EXIT_SUCCESS;
 	}
+
+	// set command implementation
+	if (0 == strcmp(command, "get")) {
+		index = 0xf;
+		unsigned char	result;
+		rc = libusb_control_transfer(handle,
+			LIBUSB_REQUEST_TYPE_VENDOR |
+			LIBUSB_RECIPIENT_DEVICE |
+			LIBUSB_ENDPOINT_IN, GUIDERPORT_GET, 
+			0, index, &result, 1, 1000);
+		if (rc < 0) {
+			fprintf(stderr, "cannot send GET: %s\n", 
+				libusb_strerror(rc));
+			return EXIT_FAILURE;
+		}
+		if (rc != 1) {
+			fprintf(stderr, "state not received");
+			return EXIT_FAILURE;
+		}
+		printf("status: %d\n", result);
+		return EXIT_SUCCESS;
+	}
+
 
 	// port command implementation
 	if (0 == strcmp(command, "port")) {

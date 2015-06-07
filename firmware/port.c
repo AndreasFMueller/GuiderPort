@@ -17,6 +17,7 @@ static porttimes_t	ports;
 
 #define	PORT_ON(p)	do { PORTD &= ~(1 << p); } while (0)
 #define	PORT_OFF(p)	do { PORTD |= (1 << p); } while (0)
+#define PORT_GET(p)	((PORTD & (1 << p)) ? 0 : 1)
 
 /**
  * \brief Turn port on
@@ -55,6 +56,31 @@ void	port_value(unsigned char port, unsigned char value) {
 	} else {
 		PORT_OFF(port);
 	}
+}
+
+/**
+ * \brief Get the state of a port
+ *
+ * Read the state of the output with number port
+ *
+ * \param port	number of the port 0-3
+ */
+unsigned char	port_get(unsigned char port) {
+	return PORT_GET(port);
+}
+
+/**
+ * \brief Retrieve all port values
+ *
+ * This function reads the current state of all ports and collects it in
+ * a single unsigned char.
+ */
+unsigned char	port_get_all() {
+	unsigned char	result = 0;
+	for (unsigned char port = 0; port < 4; port++) {
+		result |= port_get(port) ? (1 << port) : 0;
+	}
+	return result;
 }
 
 /**

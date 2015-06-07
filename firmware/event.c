@@ -81,6 +81,23 @@ void	process_set_all_times() {
 	((USB_ControlRequest.bmRequestType & CONTROL_REQTYPE_DIRECTION)	\
 		== REQDIR_HOSTTODEVICE)
 
+#define	is_outgoing() \
+	((USB_ControlRequest.bmRequestType & CONTROL_REQTYPE_DIRECTION)	\
+		== REQDIR_DEVICETOHOST)
+
+/**
+ * \brief Get the current LED state
+ *
+ * The GET request returns a single byte containing the state of all
+ * the output ports.
+ */
+void	process_get() {
+	Endpoint_ClearSETUP();
+	unsigned char	v = port_get_all();
+	Endpoint_Write_Control_Stream_LE((void *)&v, 1);
+	Endpoint_ClearOUT();
+}
+
 /**
  * \brief Control request event handler
  *
@@ -101,6 +118,13 @@ void	EVENT_USB_Device_ControlRequest() {
 				break;
 			case GUIDERPORT_SET_ALL_TIMES:
 				process_set_all_times();
+				break;
+			}
+		}
+		if (is_outgoing()) {
+			switch (USB_ControlRequest.bRequest) {
+			case GUIDERPORT_GET:
+				process_get();
 				break;
 			}
 		}

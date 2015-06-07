@@ -18,6 +18,7 @@
 #define	GUIDERPORT_SET			1
 #define GUIDERPORT_SET_PORT_TIME	2
 #define GUIDERPORT_SET_ALL_TIMES	3
+#define GUIDERPORT_GET			4
 
 /**
  * \brief Event handle for control requests

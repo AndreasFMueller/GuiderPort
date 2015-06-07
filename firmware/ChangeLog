@@ -2,6 +2,7 @@ Change log for the guiderport firmware
 
 20150607:
 	* initial GitHub release
+	* add GET request
 
 20150605:
 	* setup project
