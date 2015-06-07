@@ -140,6 +140,7 @@ void	usage(const char *progname) {
 	printf("usage:\n");
 	printf("  %s [ options ] descriptors\n", progname);
 	printf("  %s [ options ] set <value>\n", progname);
+	printf("  %s [ options ] get\n", progname);
 	printf("  %s [ options ] port <port> <time>\n", progname);
 	printf("  %s [ options ] times <value0> <value1> <value2> <value3>\n",
 		progname);
