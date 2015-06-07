@@ -10,27 +10,45 @@
 #include <util/atomic.h>
 #include <port.h>
 
-#define	RAPLUS		PORTD0
-#define RAMINUS		PORTD1
-#define DECPLUS		PORTD2
-#define	DECMINUS	PORTD3
-#define	GPORT		PORTD
 
 void	port_setup(void) __attribute__ ((constructor));
 
 static porttimes_t	ports;
 
-#define	PORT_ON(p)	do { GPORT &= ~(1 << p); } while (0)
-#define	PORT_OFF(p)	do { GPORT |= (1 << p); } while (0)
+#define	PORT_ON(p)	do { PORTD &= ~(1 << p); } while (0)
+#define	PORT_OFF(p)	do { PORTD |= (1 << p); } while (0)
 
+/**
+ * \brief Turn port on
+ *
+ * Turn on the port indicated by the port number in argument port
+ *
+ * \param port	number of the port 0-3
+ */
 void	port_on(unsigned char port) {
 	PORT_ON(port);
 }
 
+/**
+ * \brief Turn port off
+ *
+ * Turn off the port indicated by the port number in argument port
+ *
+ * \param port	number of the port 0-3
+ */
 void	port_off(unsigned char port) {
 	PORT_OFF(port);
 }
 
+/**
+ * \brief Set the value of a port
+ *
+ * Set an output to a given value. If value is zero, then the port is
+ * turned off, if it is nonzero, it is turned on.
+ *
+ * \param port		port number
+ * \param value		whether the port should be on or off
+ */
 void	port_value(unsigned char port, unsigned char value) {
 	if (value) {
 		PORT_ON(port);
@@ -39,19 +57,34 @@ void	port_value(unsigned char port, unsigned char value) {
 	}
 }
 
+/**
+ * \brief Port setup
+ *
+ * This function configures the IO-pins D0-D3 as outputs and turns them off.
+ * This method has the constructor attribute, which ensures that it is
+ * called automatically during startup.
+ */
 void	port_setup(void) {
 	// initialize ports
-	PORTD |= (1 << RAPLUS) | (1 << RAMINUS) |
-			(1 << DECPLUS) | (1 << DECMINUS);
-	DDRD |= (1 << DDD0) | (1 << DDD1) | (1 << DDD2) | (1 << DDD3);
+	PORTD |= (1 << PORTD0) | (1 << PORTD1) | (1 << PORTD2) | (1 << PORTD3);
+	DDRD  |= (1 << DDD0)   | (1 << DDD1)   | (1 << DDD2)   | (1 << DDD3);
 
-	// reset timers
+	// turn of outputs and reset timers
 	for (unsigned char i = 0; i < 4; i++) {
 		port_value(i, 0);
 		ports[i] = 0;
 	}
 }
 
+/**
+ * \brief Set time value for a port
+ *
+ * This function sets/overwrites the time during which the port selected
+ * by the port argument should be turned on. 
+ *
+ * \param port		port number 0-3
+ * \param value		time in 10ms intervals
+ */
 void	port_set(unsigned char i, unsigned short value) {
 	ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
 		if (0 == value) {
@@ -68,12 +101,26 @@ void	port_set(unsigned char i, unsigned short value) {
 	}
 }
 
+/**
+ * \brief Set all port times
+ *
+ * This function sets the port time for all ports. It is used by the
+ * implementation of the SET_ALL_TIMES request.
+ *
+ * \param p	array containing on times for all ports
+ */
 void	port_set_all(const porttimes_t p) {
 	for (unsigned char i = 0; i < 4; i++) {
 		port_set(i, p[i]);
 	}
 }
 
+/**
+ * \brief Perform a timer step 
+ *
+ * This function is called from the timer interrupt to count down the 
+ * timer values of the ports.
+ */
 void	port_step(unsigned short delta) {
 	// check whether to turn off the raplus port
 	for (unsigned char i = 0; i < 4; i++) {

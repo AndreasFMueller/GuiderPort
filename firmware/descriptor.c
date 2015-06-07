@@ -10,7 +10,10 @@
 
 const USB_Descriptor_Device_t PROGMEM DeviceDescriptor =
 {
-	.Header			= {.Size = sizeof(USB_Descriptor_Device_t), .Type = DTYPE_Device},
+	.Header			= {
+		.Size = sizeof(USB_Descriptor_Device_t),
+		.Type = DTYPE_Device
+	},
 
 	.USBSpecification	= VERSION_BCD(1,1,0),
 	.Class			= USB_CSCP_NoDeviceClass,
@@ -45,7 +48,8 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 		.ConfigurationNumber    = 1,
 		.ConfigurationStrIndex  = NO_DESCRIPTOR,
 
-		.ConfigAttributes       = (USB_CONFIG_ATTR_RESERVED | USB_CONFIG_ATTR_SELFPOWERED),
+		.ConfigAttributes       = (USB_CONFIG_ATTR_RESERVED
+						| USB_CONFIG_ATTR_SELFPOWERED),
 
 		.MaxPowerConsumption    = USB_CONFIG_POWER_MA(100)
 	},
@@ -57,10 +61,19 @@ const USB_Descriptor_String_t PROGMEM ManufacturerString
 	= USB_STRING_DESCRIPTOR(L"Andreas Mueller");
 const USB_Descriptor_String_t PROGMEM ProductString
 	= USB_STRING_DESCRIPTOR(L"GuiderPort " VERSION);
+
 // CONFIGURATION: serial number
 const USB_Descriptor_String_t EEMEM SerialNumberString
 	= USB_STRING_DESCRIPTOR(L"20150607");
 
+/**
+ * \brief Get descriptors
+ *
+ * This function returns the USB descriptor requested by the wValue and
+ * wIndex parameters. Since we have the serial number in EEPROM, we
+ * also need the MemoryAddressSpace argument to indicate to the caller
+ * in what memory address space it can find the descriptor.
+ */
 uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
 				    const uint8_t wIndex,
 				    const void** const DescriptorAddress,

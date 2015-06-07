@@ -6,6 +6,12 @@
 #ifndef _port_h
 #define _port_h
 
+/**
+ * \brief Port timer array
+ *
+ * The values in this array indicate for how many intervals of 10ms the
+ * ports should be turned on (active low).
+ */
 typedef unsigned short porttimes_t[4];
 
 extern void	port_on(unsigned char port);
