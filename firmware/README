@@ -57,6 +57,10 @@ SET_ALL_TIMES, bRequest = 3
 	unsigned short numbers in little endian format. The values in
 	wIndex and wValue are ignored.
 
+GET, bRequest = 4
+	This command retrieves the current state of the output as a
+	bitmask.
+
 Note that some mounts cannot handle multiple guider port outputs being
 active at the same time. It is the responsibility of the driver software
 to ensure that this does not happen for such mounts.
