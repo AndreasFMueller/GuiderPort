@@ -84,10 +84,26 @@ module	top() {
 		cube([2, W, 11], center = true);	
 	translate([15, 0, h - 6.5])
 		cube([2, W, 13], center = true);
+
+	// holder for 
+	translate([5.8 + 1.5 * 1.9, 4.1, h - 6.5])
+		cube([11, 5, 13], center = true);
 }
 
 translate([0, 30, h])
 	rotate([180, 0, 0])
-		top();
+		difference () {
+			top();
+			union() {
+				translate([5.8 + 0 * 1.9, 4.1, h - 10])
+					cylinder(h = 20, r = 0.9, center = true, $fn = 20);
+				translate([5.8 + 1 * 1.9, 4.1, h - 10])
+					cylinder(h = 20, r = 0.9, center = true, $fn = 20);
+				translate([5.8 + 2 * 1.9, 4.1, h - 10])
+					cylinder(h = 20, r = 0.9, center = true, $fn = 20);
+				translate([5.8 + 3 * 1.9, 4.1, h - 10])
+					cylinder(h = 20, r = 0.9, center = true, $fn = 20);
+			}
+		}
 
 bottom();
