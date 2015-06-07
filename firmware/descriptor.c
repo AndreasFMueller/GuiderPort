@@ -59,7 +59,7 @@ const USB_Descriptor_String_t PROGMEM ProductString
 	= USB_STRING_DESCRIPTOR(L"GuiderPort " VERSION);
 // CONFIGURATION: serial number
 const USB_Descriptor_String_t EEMEM SerialNumberString
-	= USB_STRING_DESCRIPTOR(L"12345678");
+	= USB_STRING_DESCRIPTOR(L"20150607");
 
 uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
 				    const uint8_t wIndex,
