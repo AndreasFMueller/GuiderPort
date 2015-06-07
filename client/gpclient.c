@@ -10,6 +10,44 @@
 #include <getopt.h>
 #include <string.h>
 
+#ifndef LIBUSB_LOG_LEVEL_DEBUG
+#define LIBUSB_LOG_LEVEL_INFO	3
+#define LIBUSB_LOG_LEVEL_DEBUG	4
+char	*libusb_strerror(int rc) {
+	switch (rc) {
+	case  0:
+		return "Success";
+	case -1:
+		return "IO error";
+	case -2:
+		return "invalid parameter";
+	case -3:
+		return "access denied";
+	case -4:
+		return "no device";
+	case -5:
+		return "not found";
+	case -6:
+		return "busy";
+	case -7:
+		return "timeout";
+	case -8:
+		return "overflow";
+	case -9:
+		return "pipe error";
+	case -10:
+		return "system call interrupted";
+	case -11:
+		return "insufficient memory";
+	case -12:
+		return "not supported";
+	}
+	return "other error";
+}
+#else
+#define HAS_USB_DEBUG 1
+#endif /* LIBUSB_LOG_LEVEL_DEBUG */
+
 #define GUIDERPORT_RESET		0
 #define GUIDERPORT_SET			1
 #define GUIDERPORT_SET_PORT_TIME	2
