@@ -146,11 +146,13 @@ void	usage(const char *progname) {
 		progname);
 	printf("  %s [ options ] reset\n", progname);
 	printf("options:\n");
-	printf(" -d         enablue USB debugging\n");
-	printf(" -h,-?      display this help and exit\n");
-	printf(" -V         show version of USB library and exit\n");
-	printf(" -v <vid>   use this vendor id to connect\n");
-	printf(" -p <pid>   use this product id to connect\n");
+	printf(" -d            enablue USB debugging\n");
+	printf(" -h,-?         display this help and exit\n");
+	printf(" -V            show version of USB library and exit\n");
+	printf(" -v <vid>      use this vendor id to connect\n");
+	printf(" -p <pid>      use this product id to connect\n");
+	printf(" -r <repeat>   how often to repeat the times command\n");
+	printf(" -s <sleep>    how long to sleep in ms after each times command\n");
 }
 
 /*
@@ -162,7 +164,9 @@ int	main(int argc, char *argv[]) {
 	int	debug = 0;
 	uint16_t	vid = 0xf055;
 	uint16_t	pid = 0x1234;
-	while (EOF != (c = getopt(argc, argv, "dh?v:p:V")))
+	int	repeat = 1;
+	int	sleeptime = 0;
+	while (EOF != (c = getopt(argc, argv, "dh?v:p:Vr:s:")))
 		switch (c) {	
 		case 'd':
 			debug = 1;
@@ -176,6 +180,15 @@ int	main(int argc, char *argv[]) {
 			break;
 		case 'p':
 			pid = atoi(optarg);
+			break;
+		case 'r':
+			repeat = atoi(optarg);
+			if (0 == repeat) {
+				repeat = -1;
+			}
+			break;
+		case 's':
+			sleeptime = atoi(optarg);
 			break;
 		case 'V':
 			show_version();
@@ -298,19 +311,25 @@ int	main(int argc, char *argv[]) {
 		}
 		index = 0;
 		value = 0;
-		rc = libusb_control_transfer(handle,
-			LIBUSB_REQUEST_TYPE_VENDOR |
-			LIBUSB_RECIPIENT_DEVICE |
-			LIBUSB_ENDPOINT_OUT, GUIDERPORT_SET_ALL_TIMES, 
-			value, index, (void *)porttimes, 8, 1000);
-		if (rc < 0) {
-			fprintf(stderr, "cannot send SET_ALL_TIMES: %s (%d)\n", 
-				libusb_strerror(rc), rc);
-			return EXIT_FAILURE;
-		}
-		if (8 != rc) {
+		while (repeat--) {
+			rc = libusb_control_transfer(handle,
+				LIBUSB_REQUEST_TYPE_VENDOR |
+				LIBUSB_RECIPIENT_DEVICE |
+				LIBUSB_ENDPOINT_OUT, GUIDERPORT_SET_ALL_TIMES, 
+				value, index, (void *)porttimes, 8, 1000);
+			if (rc < 0) {
+				fprintf(stderr,
+					"cannot send SET_ALL_TIMES: %s (%d)\n", 
+					libusb_strerror(rc), rc);
+				return EXIT_FAILURE;
+			}
+			if (8 != rc) {
 			fprintf(stderr, "cannot send all bytes\n");
-			return EXIT_FAILURE;
+				return EXIT_FAILURE;
+			}
+			if (sleeptime) {
+				usleep(1000 * sleeptime);
+			}
 		}
 		return EXIT_SUCCESS;
 	}
