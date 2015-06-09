@@ -63,7 +63,7 @@ const USB_Descriptor_String_t PROGMEM ProductString
 
 // CONFIGURATION: serial number
 const USB_Descriptor_String_t EEMEM SerialNumberString
-	= USB_STRING_DESCRIPTOR(L"20150607");
+	= USB_STRING_DESCRIPTOR(L"20150609");
 
 /**
  * \brief Get descriptors
