@@ -5,8 +5,8 @@
  */
 
 // dimensions of the board
-l = 57.15 + 0.3;
-w = 24.13 + 0.2;
+l = 57.15 + 0.4;
+w = 24.13 + 0.4;
 h = 22; // height of the top part of the case
 wall = 2.5;
 
@@ -105,9 +105,9 @@ module	top() {
 		cube([11, 5, 13], center = true);
 }
 
-filamentdiameter = 1.8;
+filamentdiameter = 1.75 + 0.5;
 
-translate([0, 30, h])
+translate([0, 32, h])
 	rotate([180, 0, 0])
 		difference () {
 			top();

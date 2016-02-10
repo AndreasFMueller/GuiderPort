@@ -121,7 +121,7 @@ int	show_descriptors(libusb_device_handle *handle) {
 	}
 	printf("    bmAttributes:         %d\n",
 		config_descriptor->bmAttributes);
-	printf("    MaxPoser:             %d\n",
+	printf("    MaxPower:             %d\n",
 		2 * config_descriptor->MaxPower);
 	return EXIT_SUCCESS;
 }
