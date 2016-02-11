@@ -30,23 +30,22 @@ noinst_PROGRAMS = guiderport
 
 AVRDUDE = avrdude -v -p usb162 -b 115200 -c avrispmkII -P usb
 
-flash:	guiderport.hex
-	$(AVRDUDE) -U flash:w:guiderport.hex
-eeprom:	guiderport.eeprom
-	$(AVRDUDE) -U eeprom:w:guiderport.eeprom
+flash:	guiderport.hex guiderport.eeprom
+	$(AVRDUDE) -U flash:w:guiderport.hex -U eeprom:w:guiderport.eeprom
 
 guiderport.hex: guiderport
 	avr-objcopy --remove-section=.eeprom --target=ihex guiderport \
 		guiderport.hex
 guiderport.eeprom: guiderport
-	avr-objcopy --only-section=.eeprom --target=ihex guiderport \
-		guiderport.eeprom
+	avr-objcopy --only-section=.eeprom --target=ihex \
+		--change-section-lma .eeprom=0 \
+		guiderport guiderport.eeprom
 
 lib_LTLIBRARIES = libguiderport.la
 
-noinst_HEADERS = port.h timer.h descriptor.h descriptor.h event.h
+noinst_HEADERS = port.h timer.h descriptor.h descriptor.h event.h serial.h
 
-libguiderport_la_SOURCES = port.c timer.c descriptor.c event.c \
+libguiderport_la_SOURCES = port.c timer.c descriptor.c event.c serial.c \
 	$(LUFA_SRC_USB_DEVICE)
 
 guiderport_SOURCES = guiderport.c

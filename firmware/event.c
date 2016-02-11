@@ -10,6 +10,7 @@
 #include <port.h>
 #include <LUFA/Drivers/USB/Core/Events.h>
 #include <avr/wdt.h>
+#include <serial.h>
 
 /**
  * \brief RESET request
@@ -70,6 +71,23 @@ void	process_set_all_times() {
 	port_set_all(newports);
 }
 
+/**
+ * \brief SERIAL request
+ *
+ * read the new serial number in ascii from the USB and copy it into the
+ * eeprom
+ */
+void    process_serial() {
+	Endpoint_ClearSETUP();
+	unsigned char	l = USB_ControlRequest.wLength;
+	if (l <= 7) {
+		Endpoint_Read_Control_Stream_LE(serialbuffer, l);
+	}
+	Endpoint_ClearIN();
+	serialbuffer[l] = '\0';
+	newserial = 1;
+}
+
 #define	is_control() \
 	((USB_ControlRequest.bmRequestType & CONTROL_REQTYPE_TYPE) 	\
 		== REQTYPE_VENDOR) 					\
@@ -118,6 +136,9 @@ void	EVENT_USB_Device_ControlRequest() {
 				break;
 			case GUIDERPORT_SET_ALL_TIMES:
 				process_set_all_times();
+				break;
+			case GUIDERPORT_SERIAL:
+				process_serial();
 				break;
 			}
 		}

@@ -62,6 +62,7 @@ char	*libusb_strerror(int rc) {
 #define GUIDERPORT_SET_PORT_TIME	2
 #define GUIDERPORT_SET_ALL_TIMES	3
 #define GUIDERPORT_GET			4
+#define GUIDERPORT_SERIAL		5
 
 /*
  * display the descriptors, for tesing
@@ -144,6 +145,7 @@ void	usage(const char *progname) {
 	printf("  %s [ options ] port <port> <time>\n", progname);
 	printf("  %s [ options ] times <value0> <value1> <value2> <value3>\n",
 		progname);
+	printf("  %s [ options ] serial <serial>\n", progname);
 	printf("  %s [ options ] reset\n", progname);
 	printf("options:\n");
 	printf(" -d            enablue USB debugging\n");
@@ -330,6 +332,31 @@ int	main(int argc, char *argv[]) {
 			if (sleeptime) {
 				usleep(1000 * sleeptime);
 			}
+		}
+		return EXIT_SUCCESS;
+	}
+
+	// serial command
+	if (0 == strcmp(command, "serial")) {
+		char    *newserial = argv[optind];
+		int     l = strlen(newserial);
+		if (l > 7) {
+			fprintf(stderr, "serial string too long\n");
+			return EXIT_FAILURE;
+		}
+		rc = libusb_control_transfer(handle,
+			LIBUSB_REQUEST_TYPE_VENDOR |
+			LIBUSB_RECIPIENT_DEVICE |
+			LIBUSB_ENDPOINT_OUT, GUIDERPORT_SERIAL,
+			0, 0, (unsigned char *)newserial, l, 1000);
+		if (rc < 0) {
+			fprintf(stderr, "cannot send SERIAL '%s': %s\n",
+				newserial, libusb_strerror(rc));
+			return EXIT_FAILURE;
+		}
+		if (rc != l) {
+			fprintf(stderr, "cannot send %d bytes: %d\n", l, rc);
+			return EXIT_FAILURE;
 		}
 		return EXIT_SUCCESS;
 	}

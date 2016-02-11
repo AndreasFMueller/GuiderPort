@@ -11,6 +11,7 @@
 #include <LUFA/Platform/Platform.h>
 #include <LUFA/Drivers/USB/USB.h>
 #include <avr/wdt.h>
+#include <serial.h>
 
 /**
  * \brief Main function for the guiderport firmware
@@ -43,6 +44,9 @@ int	main(int argc, char *argv[]) {
 
 	// do nothing
 	for (;;) {
+		if (newserial) {
+			serial_write();
+		}
 	}
 }
 
