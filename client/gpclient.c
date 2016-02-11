@@ -147,15 +147,27 @@ void	usage(const char *progname) {
 		progname);
 	printf("  %s [ options ] serial <serial>\n", progname);
 	printf("  %s [ options ] reset\n", progname);
+	printf("  %s [ options ] help\n", progname);
 	printf("options:\n");
-	printf(" -d            enablue USB debugging\n");
-	printf(" -h,-?         display this help and exit\n");
-	printf(" -V            show version of USB library and exit\n");
-	printf(" -v <vid>      use this vendor id to connect\n");
-	printf(" -p <pid>      use this product id to connect\n");
-	printf(" -r <repeat>   how often to repeat the times command\n");
-	printf(" -s <sleep>    how long to sleep in ms after each times command\n");
+	printf(" -d,--debug             enablue USB debugging\n");
+	printf(" -h,-?,--help           display this help and exit\n");
+	printf(" -V,--version           show version of USB library and exit\n");
+	printf(" -v,--vendor=<vid>      use this vendor id to connect\n");
+	printf(" -p,--product=<pid>     use this product id to connect\n");
+	printf(" -r,--repeat=<repeat>   how often to repeat the times command\n");
+	printf(" -s,--sleep=<sleep>     how long to sleep in ms after each times command\n");
 }
+
+static struct option	longopts[] = {
+{ "debug",	no_argument,		NULL,	'd' },
+{ "help",	no_argument,		NULL,	'h' },
+{ "product",	required_argument,	NULL,	'p' },
+{ "repeat",	required_argument,	NULL,	'r' },
+{ "sleep",	required_argument,	NULL,	's' },
+{ "vendor",	required_argument,	NULL,	'v' },
+{ "version",	no_argument,		NULL,	'V' },
+{ NULL,		0,			NULL,	0   }
+};
 
 /*
  * Main function of the client program
@@ -168,7 +180,9 @@ int	main(int argc, char *argv[]) {
 	uint16_t	pid = 0x1234;
 	int	repeat = 1;
 	int	sleeptime = 0;
-	while (EOF != (c = getopt(argc, argv, "dh?v:p:Vr:s:")))
+	int	longindex;
+	while (EOF != (c = getopt_long(argc, argv, "dh?v:p:Vr:s:",
+		longopts, &longindex)))
 		switch (c) {	
 		case 'd':
 			debug = 1;
@@ -203,6 +217,12 @@ int	main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 	char	*command = argv[optind++];
+
+	// help command
+	if (0 == strcmp(command, "help")) {
+		usage(argv[0]);
+		return EXIT_SUCCESS;
+	}
 
 	// initialize libusb library
 	libusb_context	*context;
