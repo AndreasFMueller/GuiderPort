@@ -73,7 +73,7 @@ char    *read_string(libusb_device_handle *handle, int stringid, int *counter) {
 	unsigned char   *s = (unsigned char *)malloc(128);
 	int     retries = 0;
 	do {
-		usleep(10000);
+//		usleep(10000);
 		rc = libusb_get_string_descriptor_ascii(handle,
 				stringid, s, 128);
 		if (rc >= 0) {
@@ -411,6 +411,10 @@ int	main(int argc, char *argv[]) {
 
 	// serial command
 	if (0 == strcmp(command, "serial")) {
+		if (optind >= argc) {
+			fprintf(stderr, "no argument to serial given\n");
+			return EXIT_SUCCESS;
+		}
 		char    *newserial = argv[optind];
 		int     l = strlen(newserial);
 		if (l > 7) {
