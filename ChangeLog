@@ -1,0 +1,5 @@
+ChangeLog
+
+20180503:
+	* add workaround for sporadic issues with at90usb162
+

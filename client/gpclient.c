@@ -10,6 +10,8 @@
 #include <getopt.h>
 #include <string.h>
 
+static int	debug = 0;
+
 /*
  * we have to find out whether this is a sufficiently modern libusb.
  * unfortunately, older libusb implementations have no way to tell 
@@ -64,6 +66,35 @@ char	*libusb_strerror(int rc) {
 #define GUIDERPORT_GET			4
 #define GUIDERPORT_SERIAL		5
 
+static int	max_retries = 3;
+
+char    *read_string(libusb_device_handle *handle, int stringid) {
+	int     rc;
+	unsigned char   *s = (unsigned char *)malloc(128);
+	int     retries = 0;
+	do {
+		rc = libusb_get_string_descriptor_ascii(handle,
+				stringid, s, 128);
+		if (rc >= 0) {
+			return (char *)s;
+		}
+		if (debug) {
+			fprintf(stderr, "error: %s (%d)",
+				libusb_error_name(rc), rc);
+		} else {
+			fprintf(stderr, ".");
+			fflush(stderr);
+		}
+	} while (max_retries > ++retries);
+	snprintf((char *)s, 128, "last error: %s (%d)",
+		libusb_error_name(rc), rc);
+	return (char *)s;
+}
+
+
+
+
+
 /*
  * display the descriptors, for tesing
  */
@@ -82,21 +113,23 @@ int	show_descriptors(libusb_device_handle *handle) {
 	printf("bMaxPacketSize0:    %d\n", device_descriptor.bMaxPacketSize0);
 	printf("idVendor:           0x%04x\n", device_descriptor.idVendor);
 	printf("idProduct:          0x%04x\n", device_descriptor.idProduct);
-	unsigned char	s[128];
 	if (device_descriptor.iManufacturer) {
-		libusb_get_string_descriptor_ascii(handle,
-			device_descriptor.iManufacturer, s, sizeof(s));
+		char	*s = read_string(handle,
+				device_descriptor.iManufacturer);
 		printf("Manufacturer:       %s\n", s);
+		free(s);
 	}
 	if (device_descriptor.iProduct) {
-		libusb_get_string_descriptor_ascii(handle,
-			device_descriptor.iProduct, s, sizeof(s));
+		char	*s = read_string(handle,
+				device_descriptor.iProduct);
 		printf("Product:            %s\n", s);
+		free(s);
 	}
 	if (device_descriptor.iSerialNumber) {
-		libusb_get_string_descriptor_ascii(handle,
-			device_descriptor.iSerialNumber, s, sizeof(s));
+		char	*s = read_string(handle,
+				device_descriptor.iSerialNumber);
 		printf("Serial Number:      %s\n", s);
+		free(s);
 	}
 	printf("bNumConfigurations: %d\n", device_descriptor.bNumConfigurations);
 
@@ -116,9 +149,10 @@ int	show_descriptors(libusb_device_handle *handle) {
 	printf("    bConfigurationValue:  %d\n",
 		config_descriptor->bConfigurationValue);
 	if (config_descriptor->iConfiguration) {
-		libusb_get_string_descriptor_ascii(handle,
-			config_descriptor->iConfiguration, s, sizeof(s));
+		char	*s = read_string(handle,
+				config_descriptor->iConfiguration);
 		printf("Serial Number:      %s\n", s);
+		free(s);
 	}
 	printf("    bmAttributes:         %d\n",
 		config_descriptor->bmAttributes);
@@ -175,7 +209,6 @@ static struct option	longopts[] = {
 int	main(int argc, char *argv[]) {
 	// parse command line
 	int	c;
-	int	debug = 0;
 	uint16_t	vid = 0xf055;
 	uint16_t	pid = 0x1234;
 	int	repeat = 1;
