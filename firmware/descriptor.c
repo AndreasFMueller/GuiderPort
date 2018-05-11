@@ -74,7 +74,7 @@ const USB_Descriptor_String_t EEMEM SerialNumberString
  * in what memory address space it can find the descriptor.
  */
 uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
-				    const uint8_t wIndex,
+				    const uint16_t wIndex,
 				    const void** const DescriptorAddress,
 				    uint8_t* MemoryAddressSpace)
 {

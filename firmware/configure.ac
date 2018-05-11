@@ -6,9 +6,9 @@
 #
 AC_PREREQ(2.57)
 AC_REVISION([1.0])
-AC_INIT
+AC_INIT([guiderport], [1.0])
 AC_CONFIG_SRCDIR([guiderport.c])
-AM_INIT_AUTOMAKE(guiderport, 1.0)
+AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS(config.h)
 
 AM_PROG_LIBTOOL

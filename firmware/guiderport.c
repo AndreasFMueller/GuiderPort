@@ -44,6 +44,7 @@ int	main(int argc, char *argv[]) {
 
 	// do nothing
 	for (;;) {
+		USB_USBTask();
 		if (newserial) {
 			serial_write();
 		}

@@ -68,11 +68,12 @@ char	*libusb_strerror(int rc) {
 
 static int	max_retries = 3;
 
-char    *read_string(libusb_device_handle *handle, int stringid) {
+char    *read_string(libusb_device_handle *handle, int stringid, int *counter) {
 	int     rc;
 	unsigned char   *s = (unsigned char *)malloc(128);
 	int     retries = 0;
 	do {
+		usleep(10000);
 		rc = libusb_get_string_descriptor_ascii(handle,
 				stringid, s, 128);
 		if (rc >= 0) {
@@ -85,13 +86,18 @@ char    *read_string(libusb_device_handle *handle, int stringid) {
 			fprintf(stderr, ".");
 			fflush(stderr);
 		}
+		if (counter) {
+			++*counter;
+		}
 	} while (max_retries > ++retries);
 	snprintf((char *)s, 128, "last error: %s (%d)",
 		libusb_error_name(rc), rc);
 	return (char *)s;
 }
 
-
+static int	iManufacturerCounter = 0;
+static int	iProduct = 0;
+static int	iSerialNumber = 0;
 
 
 
@@ -115,19 +121,22 @@ int	show_descriptors(libusb_device_handle *handle) {
 	printf("idProduct:          0x%04x\n", device_descriptor.idProduct);
 	if (device_descriptor.iManufacturer) {
 		char	*s = read_string(handle,
-				device_descriptor.iManufacturer);
+				device_descriptor.iManufacturer,
+				&iManufacturerCounter);
 		printf("Manufacturer:       %s\n", s);
 		free(s);
 	}
 	if (device_descriptor.iProduct) {
 		char	*s = read_string(handle,
-				device_descriptor.iProduct);
+				device_descriptor.iProduct,
+				&iProduct);
 		printf("Product:            %s\n", s);
 		free(s);
 	}
 	if (device_descriptor.iSerialNumber) {
 		char	*s = read_string(handle,
-				device_descriptor.iSerialNumber);
+				device_descriptor.iSerialNumber,
+				&iSerialNumber);
 		printf("Serial Number:      %s\n", s);
 		free(s);
 	}
@@ -150,7 +159,7 @@ int	show_descriptors(libusb_device_handle *handle) {
 		config_descriptor->bConfigurationValue);
 	if (config_descriptor->iConfiguration) {
 		char	*s = read_string(handle,
-				config_descriptor->iConfiguration);
+				config_descriptor->iConfiguration, NULL);
 		printf("Serial Number:      %s\n", s);
 		free(s);
 	}
@@ -273,6 +282,17 @@ int	main(int argc, char *argv[]) {
 
 	// process the descriptors command
 	if (0 == strcmp(command, "descriptors")) {
+#if 1
+		for (int i = 0; i < 1000; i++) {
+			show_descriptors(handle);
+		}	
+		fprintf(stderr, "iManufacturerCounter: %10d\n",
+			iManufacturerCounter);
+		fprintf(stderr, "iProduct:             %10d\n",
+			iProduct);
+		fprintf(stderr, "iSerialNumber:        %10d\n",
+			iSerialNumber);
+#endif
 		return show_descriptors(handle);
 	}
 
