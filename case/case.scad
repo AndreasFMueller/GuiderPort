@@ -16,7 +16,7 @@ W = w + 2 * wall;
 H = 5;
 s = 4.5;
 board = 1.8; // board thickness
-gap = 0.1;
+gap = 0.2;
 
 // Bottom part
 module	bottom() {
