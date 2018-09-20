@@ -282,7 +282,7 @@ int	main(int argc, char *argv[]) {
 
 	// process the descriptors command
 	if (0 == strcmp(command, "descriptors")) {
-#if 1
+#if 0
 		for (int i = 0; i < 1000; i++) {
 			show_descriptors(handle);
 		}	

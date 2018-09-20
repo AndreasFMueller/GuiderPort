@@ -8,7 +8,7 @@
 #include <avr/eeprom.h>
 
 volatile unsigned char	newserial = 0;
-char serialbuffer[8] = "000000";
+char serialbuffer[8] = "0000000";
 
 void	serial_write() {
 	// make sure 
