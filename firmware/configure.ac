@@ -5,8 +5,8 @@
 # $Id$
 #
 AC_PREREQ(2.57)
-AC_REVISION([1.0])
-AC_INIT([guiderport], [1.0])
+AC_REVISION([1.1])
+AC_INIT([guiderport], [1.1])
 AC_CONFIG_SRCDIR([guiderport.c])
 AM_INIT_AUTOMAKE
 AC_CONFIG_HEADERS(config.h)
@@ -49,6 +49,9 @@ AC_SUBST(LUFA_F_CPU)
 CPPFLAGS="${CPPFLAGS} -std=gnu99 -I${LUFA_PATH} -DUSE_LUFA_CONFIG_HEADER -DARCH=ARCH_${LUFA_ARCH} -DF_USB=${LUFA_F_USB}UL -DF_CPU=${LUFA_F_CPU}UL"
 
 CFLAGS="${CFLAGS} -std=gnu99 -mmcu=${LUFA_MCU} -fshort-enums -fno-inline-small-functions -fpack-struct -fno-strict-aliasing -funsigned-char -funsigned-bitfields -ffunction-sections"
+
+builddate=`date +%Y%m%d`
+AC_DEFINE_UNQUOTED(BUILDDATE,["-${builddate}"],[bild date of the guideport firmware])
 
 # the -u flag is needed to ensure that the EVENT handler is linked. There
 # already is a weak symbol of the same name, and the linker apparently sees

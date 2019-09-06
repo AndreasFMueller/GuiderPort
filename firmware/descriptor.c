@@ -59,7 +59,7 @@ const USB_Descriptor_String_t PROGMEM LanguageString
 const USB_Descriptor_String_t PROGMEM ManufacturerString
 	= USB_STRING_DESCRIPTOR(L"Andreas Mueller");
 const USB_Descriptor_String_t PROGMEM ProductString
-	= USB_STRING_DESCRIPTOR(L"GuiderPort " VERSION "-20160211");
+	= USB_STRING_DESCRIPTOR(L"GuiderPort " VERSION BUILDDATE);
 
 // CONFIGURATION: serial number
 const USB_Descriptor_String_t EEMEM SerialNumberString

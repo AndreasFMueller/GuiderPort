@@ -1,5 +1,8 @@
 Change log for the guiderport firmware
 
+20190906:
+	* automatically add build date to description string
+
 20150607:
 	* initial GitHub release
 	* add GET request
